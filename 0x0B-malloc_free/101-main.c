@@ -3,10 +3,18 @@
 #include <stdlib.h>
 
 /**
- * print_tab - Prints an array of string
+ * strtow - Split a string into words
+ * @str: The string to split
+ *
+ * Return: Pointer to an array of strings, or NULL on failure
+ */
+char **strtow(char *str);
+
+/**
+ * print_tab - Prints an array of strings
  * @tab: The array to print
  *
- * Return: nothing
+ * Return: Nothing
  */
 void print_tab(char **tab)
 {
@@ -19,7 +27,7 @@ void print_tab(char **tab)
 }
 
 /**
- * main - check the code for ALX School students.
+ * main - Check the code for ALX School students.
  *
  * Return: 1 if an error occurred, 0 otherwise
  */
