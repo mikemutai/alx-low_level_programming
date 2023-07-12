@@ -1,74 +1,63 @@
-#include <stdlib.h>
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * count_word - counts the number of words in a string
- * @s: pointer to the string
+ * strtow - Split a string into words
+ * @str: The string to split
  *
- * Return: Number of words in the string
- */
-int count_word(char *s)
-{
-	int flag = 0, w = 0, c;
-
-	for (c = 0; s[c] != '\0'; c++)
-	{
-		if (s[c] == ' ')
-			flag = 0;
-		else if (flag == 0)
-		{
-			flag = 1;
-			w++;
-		}
-	}
-
-	return (w);
-}
-
-/**
- * strtow - splits a string into individual words
- * @str: pointer to the string
- *
- * Return: Pointer to an array of strings, or NULL if fail.
+ * Return: Pointer to an array of strings, or NULL on failure
  */
 char **strtow(char *str)
 {
-	int i, len = 0, c = 0, k = 0, start, end;
-	char **matrix, *tmp;
+	int i, j, k, len, words;
+	char **matrix;
 
+	if (str == NULL || *str == '\0')
+		return (NULL);
+
+	len = 0;
 	while (str[len] != '\0')
 		len++;
 
-	if (len == 0)
-		return (NULL);
+	words = 0;
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != ' ' && (str[i + 1] == ' ' || str[i + 1] == '\0'))
+			words++;
+	}
 
-	matrix = malloc(sizeof(char *) * (count_word(str) + 1));
-
+	matrix = malloc(sizeof(char *) * (words + 1));
 	if (matrix == NULL)
 		return (NULL);
 
-	for (i = 0; str[i] != '\0'; i++)
+	j = 0;
+	for (i = 0; i < len && j < words; i++)
 	{
-		if (str[i] == ' ' || str[i] == '\0')
+		if (str[i] != ' ')
 		{
-			if (c)
+			k = i;
+			while (str[i] != ' ' && str[i] != '\0')
+				i++;
+			matrix[j] = malloc(sizeof(char) * (i - k + 1));
+			if (matrix[j] == NULL)
 			{
-				end = i;
-				tmp = malloc(sizeof(char) * (c + 1));
-				while (start < end)
-					*tmp++ = str[start++];
-				*tmp = '\0';
-				matrix[k] = tmp - c;
-				k++;
-				c = 0;
+				for (j = j - 1; j >= 0; j--)
+					free(matrix[j]);
+				free(matrix);
+				return (NULL);
 			}
-		}
-		else if (c++ == 0)
-		{
-			start = i;
+			k = 0;
+			while (k < (i - k))
+			{
+				matrix[j][k] = str[k + j];
+				k++;
+			}
+			matrix[j][k] = '\0';
+			j++;
 		}
 	}
+	matrix[j] = NULL;
 
-	matrix[k] = NULL;
 	return (matrix);
 }
